@@ -47,4 +47,10 @@ class CustomerRepository {
                 .map(record -> record.into(Customer.class))
                 .orElseThrow(() -> new NoSuchElementException("Not found customer by id " + id));
     }
+
+    List<Customer> findByFirstName(String firstName) {
+        return dslContext.selectFrom(CUSTOMER)
+                .where(CUSTOMER.FIRST_NAME.eq(firstName))
+                .fetchInto(Customer.class);
+    }
 }

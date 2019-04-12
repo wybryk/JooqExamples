@@ -13,11 +13,6 @@ import static org.assertj.core.api.Assertions.assertThat
 class CustomerRepositoryTest extends Specification {
     @Autowired
     private CustomerRepository customerRepository
-    private CustomerUtils customerUtils
-
-    def setup() {
-        customerUtils = new CustomerUtils()
-    }
 
     def cleanup() {
         customerRepository.deleteAll()
@@ -33,7 +28,7 @@ class CustomerRepositoryTest extends Specification {
 
     def "insert customer test should return one record"() {
         given:
-            Customer customer = customerUtils.buildCustomer(1, "Bob", "Pure")
+            Customer customer = CustomerUtils.buildCustomer(1, "Bob", "Pure")
         when:
             customerRepository.insert(customer)
             List<Customer> customers = customerRepository.findAll()
@@ -45,11 +40,11 @@ class CustomerRepositoryTest extends Specification {
     def "insert customer list test should return five records"() {
         given:
             List<Customer> customers = new ArrayList<>()
-            customers.add(customerUtils.buildCustomer(1, "Bob", "Pure"))
-            customers.add(customerUtils.buildCustomer(2, "Alfie", "Nelson"))
-            customers.add(customerUtils.buildCustomer(3, "Gordon", "Pure"))
-            customers.add(customerUtils.buildCustomer(4, "Bob", "Adams"))
-            customers.add(customerUtils.buildCustomer(5, "John", "Parker"))
+            customers.add(CustomerUtils.buildCustomer(1, "Bob", "Pure"))
+            customers.add(CustomerUtils.buildCustomer(2, "Alfie", "Nelson"))
+            customers.add(CustomerUtils.buildCustomer(3, "Gordon", "Pure"))
+            customers.add(CustomerUtils.buildCustomer(4, "Bob", "Adams"))
+            customers.add(CustomerUtils.buildCustomer(5, "John", "Parker"))
         when:
             customerRepository.insertAll(customers)
             List<Customer> foundCustomers = customerRepository.findAll()
@@ -61,11 +56,11 @@ class CustomerRepositoryTest extends Specification {
     def "select by id should return one record"() {
         given:
             List<Customer> customers = new ArrayList<>()
-            customers.add(customerUtils.buildCustomer(1, "Bob", "Pure"))
-            customers.add(customerUtils.buildCustomer(2, "Alfie", "Nelson"))
-            customers.add(customerUtils.buildCustomer(3, "Gordon", "Pure"))
-            customers.add(customerUtils.buildCustomer(4, "Bob", "Adams"))
-            customers.add(customerUtils.buildCustomer(5, "John", "Parker"))
+            customers.add(CustomerUtils.buildCustomer(1, "Bob", "Pure"))
+            customers.add(CustomerUtils.buildCustomer(2, "Alfie", "Nelson"))
+            customers.add(CustomerUtils.buildCustomer(3, "Gordon", "Pure"))
+            customers.add(CustomerUtils.buildCustomer(4, "Bob", "Adams"))
+            customers.add(CustomerUtils.buildCustomer(5, "John", "Parker"))
             customerRepository.insertAll(customers)
         when:
             Customer customer = customerRepository.findById(2)
@@ -77,16 +72,47 @@ class CustomerRepositoryTest extends Specification {
     def "select by id should not return record"() {
         given:
             List<Customer> customers = new ArrayList<>()
-            customers.add(customerUtils.buildCustomer(1, "Bob", "Pure"))
-            customers.add(customerUtils.buildCustomer(2, "Alfie", "Nelson"))
-            customers.add(customerUtils.buildCustomer(3, "Gordon", "Pure"))
-            customers.add(customerUtils.buildCustomer(4, "Bob", "Adams"))
-            customers.add(customerUtils.buildCustomer(5, "John", "Parker"))
+            customers.add(CustomerUtils.buildCustomer(1, "Bob", "Pure"))
+            customers.add(CustomerUtils.buildCustomer(2, "Alfie", "Nelson"))
+            customers.add(CustomerUtils.buildCustomer(3, "Gordon", "Pure"))
+            customers.add(CustomerUtils.buildCustomer(4, "Bob", "Adams"))
+            customers.add(CustomerUtils.buildCustomer(5, "John", "Parker"))
             customerRepository.insertAll(customers)
         when:
             customerRepository.findById(6)
         then:
             def exception = thrown(NoSuchElementException)
             exception.message == "Not found customer by id 6"
+    }
+
+    def "select customer by name should return two records"() {
+        given:
+            List<Customer> customers = new ArrayList<>()
+            customers.add(CustomerUtils.buildCustomer(1, "Bob", "Pure"))
+            customers.add(CustomerUtils.buildCustomer(2, "Alfie", "Nelson"))
+            customers.add(CustomerUtils.buildCustomer(3, "Gordon", "Pure"))
+            customers.add(CustomerUtils.buildCustomer(4, "Bob", "Adams"))
+            customers.add(CustomerUtils.buildCustomer(5, "John", "Parker"))
+            customerRepository.insertAll(customers)
+        when:
+            List<Customer> foundCustomers = customerRepository.findByFirstName("Bob")
+        then:
+            foundCustomers.size() == 2
+            assertThat(foundCustomers).extracting("id").contains(1, 4)
+    }
+
+    def "select customer by name should not return record"() {
+        given:
+            List<Customer> customers = new ArrayList<>()
+            customers.add(CustomerUtils.buildCustomer(1, "Bob", "Pure"))
+            customers.add(CustomerUtils.buildCustomer(2, "Alfie", "Nelson"))
+            customers.add(CustomerUtils.buildCustomer(3, "Gordon", "Pure"))
+            customers.add(CustomerUtils.buildCustomer(4, "Bob", "Adams"))
+            customers.add(CustomerUtils.buildCustomer(5, "John", "Parker"))
+            customerRepository.insertAll(customers)
+        when:
+            List<Customer> foundCustomers = customerRepository.findByFirstName("Abi")
+        then:
+            foundCustomers.isEmpty()
     }
 }
