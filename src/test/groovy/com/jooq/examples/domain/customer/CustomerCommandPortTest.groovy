@@ -47,4 +47,18 @@ class CustomerCommandPortTest extends CustomerAbstractTest {
             List<Customer> foundCustomers = customerQueryPort.findAll()
             foundCustomers.size() == 4
     }
+
+    def "update customer test"() {
+        given:
+            List<Customer> customers = CustomerUtils.buildCustomers()
+            customerCommandPort.insertAll(customers)
+        when:
+            Customer customer = CustomerUtils.buildCustomer(3, "Gordon", "Dirt")
+            customerCommandPort.update(customer)
+        then:
+            Customer foundCustomer = customerQueryPort.findById(3)
+            foundCustomer.getId() == 3
+            foundCustomer.getFirstName() == "Gordon"
+            foundCustomer.getLastName() == "Dirt"
+    }
 }

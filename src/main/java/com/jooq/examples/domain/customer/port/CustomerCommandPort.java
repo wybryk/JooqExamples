@@ -9,4 +9,5 @@ public interface CustomerCommandPort {
     void insertAll(List<Customer> customers);
     void deleteAll();
     void deleteById(Integer id);
+    void update(Customer customer);
 }

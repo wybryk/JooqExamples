@@ -40,6 +40,14 @@ class CustomerRepository {
                 .execute();
     }
 
+    void update(Customer customer) {
+        dslContext.update(CUSTOMER)
+                .set(CUSTOMER.FIRST_NAME, customer.getFirstName())
+                .set(CUSTOMER.LAST_NAME, customer.getLastName())
+                .where(CUSTOMER.ID.eq(customer.getId()))
+                .execute();
+    }
+
     List<Customer> findAll() {
         return dslContext.selectFrom(CUSTOMER)
                 .fetchInto(Customer.class);
