@@ -25,4 +25,9 @@ class CustomerCommandAdapter implements CustomerCommandPort {
     public void deleteAll() {
         customerRepository.deleteAll();
     }
+
+    @Override
+    public void deleteById(Integer id) {
+        customerRepository.deleteById(id);
+    }
 }

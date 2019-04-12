@@ -33,6 +33,13 @@ class CustomerRepository {
             .execute();
     }
 
+
+    void deleteById(Integer id) {
+        dslContext.deleteFrom(CUSTOMER)
+                .where(CUSTOMER.ID.eq(id))
+                .execute();
+    }
+
     List<Customer> findAll() {
         return dslContext.selectFrom(CUSTOMER)
                 .fetchInto(Customer.class);

@@ -36,4 +36,15 @@ class CustomerCommandPortTest extends CustomerAbstractTest {
             List<Customer> foundCustomers = customerQueryPort.findAll()
             foundCustomers.size() == 0
     }
+
+    def "delete by id customer should return four records"() {
+        given:
+            List<Customer> customers = CustomerUtils.buildCustomers()
+            customerCommandPort.insertAll(customers)
+        when:
+            customerCommandPort.deleteById(4)
+        then:
+            List<Customer> foundCustomers = customerQueryPort.findAll()
+            foundCustomers.size() == 4
+    }
 }
