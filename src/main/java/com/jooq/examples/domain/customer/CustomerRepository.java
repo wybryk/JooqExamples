@@ -7,6 +7,7 @@ import org.jooq.InsertValuesStep3;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static com.jooq.examples.testdb.public_.tables.Customer.CUSTOMER;
 
@@ -14,11 +15,6 @@ import static com.jooq.examples.testdb.public_.tables.Customer.CUSTOMER;
 @AllArgsConstructor
 class CustomerRepository {
     private DSLContext dslContext;
-
-    List<Customer> findAll() {
-        return dslContext.selectFrom(CUSTOMER)
-                .fetchInto(Customer.class);
-    }
 
     void insert(Customer customer) {
         dslContext.newRecord(CUSTOMER, customer)
@@ -35,5 +31,20 @@ class CustomerRepository {
     void deleteAll() {
         dslContext.deleteFrom(CUSTOMER)
             .execute();
+    }
+
+    List<Customer> findAll() {
+        return dslContext.selectFrom(CUSTOMER)
+                .fetchInto(Customer.class);
+    }
+
+    Customer findById(Integer id) {
+        return dslContext.selectFrom(CUSTOMER)
+                .where(CUSTOMER.ID.eq(id))
+                .fetch()
+                .stream()
+                .findFirst()
+                .map(record -> record.into(Customer.class))
+                .orElseThrow(() -> new NoSuchElementException("Not found customer by id " + id));
     }
 }

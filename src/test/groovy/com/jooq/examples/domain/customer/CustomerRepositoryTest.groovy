@@ -57,4 +57,36 @@ class CustomerRepositoryTest extends Specification {
             customers.size() == 5
             assertThat(foundCustomers).extracting("id").contains(1, 2, 3, 4, 5)
     }
+
+    def "select by id should return one record"() {
+        given:
+            List<Customer> customers = new ArrayList<>()
+            customers.add(customerUtils.buildCustomer(1, "Bob", "Pure"))
+            customers.add(customerUtils.buildCustomer(2, "Alfie", "Nelson"))
+            customers.add(customerUtils.buildCustomer(3, "Gordon", "Pure"))
+            customers.add(customerUtils.buildCustomer(4, "Bob", "Adams"))
+            customers.add(customerUtils.buildCustomer(5, "John", "Parker"))
+            customerRepository.insertAll(customers)
+        when:
+            Customer customer = customerRepository.findById(2)
+        then:
+            customer != null
+            customer.id == 2
+    }
+
+    def "select by id should not return record"() {
+        given:
+            List<Customer> customers = new ArrayList<>()
+            customers.add(customerUtils.buildCustomer(1, "Bob", "Pure"))
+            customers.add(customerUtils.buildCustomer(2, "Alfie", "Nelson"))
+            customers.add(customerUtils.buildCustomer(3, "Gordon", "Pure"))
+            customers.add(customerUtils.buildCustomer(4, "Bob", "Adams"))
+            customers.add(customerUtils.buildCustomer(5, "John", "Parker"))
+            customerRepository.insertAll(customers)
+        when:
+            customerRepository.findById(6)
+        then:
+            def exception = thrown(NoSuchElementException)
+            exception.message == "Not found customer by id 6"
+    }
 }
