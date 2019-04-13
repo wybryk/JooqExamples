@@ -1,4 +1,4 @@
-package com.jooq.examples.domain.trip;
+package com.jooq.examples.domain.enums;
 
 public enum TransportType {
     CAR,

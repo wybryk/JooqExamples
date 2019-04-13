@@ -16,7 +16,7 @@ CREATE TABLE trip (
     title VARCHAR(100) NOT NULL,
     transport_type VARCHAR(20) NOT NULL,
     duration INT NOT NULL,
-    price DECIMAL(2),
+    price DECIMAL(10, 2),
     destination_id INT NOT NULL,
 
     CONSTRAINT fk_t_destination FOREIGN KEY (destination_id) REFERENCES destination (id)

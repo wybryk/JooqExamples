@@ -1,5 +1,6 @@
 package com.jooq.examples.domain.trip;
 
+import com.jooq.examples.domain.enums.TransportType;
 import lombok.Builder;
 import lombok.Value;
 
