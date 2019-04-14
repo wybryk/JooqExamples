@@ -4,6 +4,8 @@ import com.jooq.examples.domain.customertrip.port.CustomerTripCommandPort;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 class CustomerTripCommandAdapter implements CustomerTripCommandPort {
@@ -12,6 +14,11 @@ class CustomerTripCommandAdapter implements CustomerTripCommandPort {
     @Override
     public void insert(CustomerTrip customerTrip) {
         customerTripRepository.insert(customerTrip);
+    }
+
+    @Override
+    public void insertAll(List<CustomerTrip> customerTrips) {
+        customerTripRepository.insertAll(customerTrips);
     }
 
     @Override

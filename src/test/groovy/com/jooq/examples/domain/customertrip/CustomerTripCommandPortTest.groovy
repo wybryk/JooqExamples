@@ -20,6 +20,8 @@ import spock.lang.Specification
 import java.time.LocalDate
 import java.time.LocalDateTime
 
+import static org.assertj.core.api.Assertions.assertThat
+
 @SpringBootTest(classes = JooqExamplesApplication)
 @ContextConfiguration
 class CustomerTripCommandPortTest extends Specification {
@@ -28,17 +30,17 @@ class CustomerTripCommandPortTest extends Specification {
     @Autowired private TripCommandPort tripCommandPort
     @Autowired private DestinationCommandPort destinationCommandPort
     @Autowired private CustomerCommandPort customerCommandPort
-    private Trip trip
-    private Destination destination
-    private Customer customer
+    private List<Trip> trips
+    private List<Destination> destinations
+    private List<Customer> customers
 
     def setup() {
-        destination = DestinationUtils.buildDestination()
-        destinationCommandPort.insert(destination)
-        trip = TripUtils.buildTrip(destination)
-        tripCommandPort.insert(trip)
-        customer = CustomerUtils.buildCustomer(1, "Alfie", "Logan")
-        customerCommandPort.insert(customer)
+        destinations = DestinationUtils.buildDestinations()
+        destinationCommandPort.insertAll(destinations)
+        trips = TripUtils.buildTrips(destinations)
+        tripCommandPort.insertAll(trips)
+        customers = CustomerUtils.buildCustomers()
+        customerCommandPort.insertAll(customers)
     }
 
     def cleanup() {
@@ -50,16 +52,28 @@ class CustomerTripCommandPortTest extends Specification {
 
     def "customer trip insert test"() {
         given:
-            CustomerTrip customerTrip = CustomerTripUtils.buildCustomerTrip(trip, customer)
+            CustomerTrip customerTrip = CustomerTripUtils.buildCustomerTrip(1, LocalDate.of(2019, 4, 13),
+                    LocalDateTime.of(2019, 4, 13, 15, 54), trips.get(0), customers.get(0))
         when:
             customerTripCommandPort.insert(customerTrip)
         then:
             List<CustomerTrip> customerTripList = customerTripQueryPort.findAll()
             customerTripList.size() == 1
             customerTripList.get(0).getId() == 1
-            customerTripList.get(0).getCustomerId() == customer.getId()
-            customerTripList.get(0).getTripId() == trip.getId()
+            customerTripList.get(0).getCustomerId() == customers.get(0).getId()
+            customerTripList.get(0).getTripId() == trips.get(0).getId()
             customerTripList.get(0).getStartDate() == LocalDate.of(2019, 4, 13)
             customerTripList.get(0).getInsertionTime() == LocalDateTime.of(2019, 4, 13, 15, 54)
+    }
+
+    def "customer trip list insert test should return ten records"() {
+        given:
+            List<CustomerTrip> customerTrips = CustomerTripUtils.buildCustomerTrips(trips, customers)
+        when:
+            customerTripCommandPort.insertAll(customerTrips)
+        then:
+            List<CustomerTrip> foundCustomerTripss = customerTripQueryPort.findAll()
+            foundCustomerTripss.size() == 10
+            assertThat(foundCustomerTripss).extracting("id").contains(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
     }
 }
