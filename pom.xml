@@ -11,7 +11,6 @@
     <properties>
         <org.jooq.version>3.11.10</org.jooq.version>
         <com.h2database.version>1.4.199</com.h2database.version>
-        <org.postgresql.version>42.2.5</org.postgresql.version>
     </properties>
 
     <dependencies>
