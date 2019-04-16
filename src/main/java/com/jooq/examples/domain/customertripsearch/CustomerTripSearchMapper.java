@@ -13,8 +13,8 @@ class CustomerTripSearchMapper {
                 .id(record.get(CUSTOMER_TRIP.ID))
                 .customer(buildCustomer(record))
                 .trip(buildTrip(record))
-                .startDate(record.get(CUSTOMER_TRIP.START_DATE).toLocalDate())
-                .insertionTime(record.get(CUSTOMER_TRIP.INSERTION_TIME).toLocalDateTime())
+                .startDate(record.get(CUSTOMER_TRIP.START_DATE))
+                .insertionTime(record.get(CUSTOMER_TRIP.INSERTION_TIME))
                 .build();
     }
 

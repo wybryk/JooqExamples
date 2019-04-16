@@ -192,6 +192,18 @@
                                 <database>
                                     <name>${db.test.name}</name>
                                     <inputCatalog></inputCatalog>
+                                    <forcedTypes>
+                                        <forcedType>
+                                            <userType>java.time.LocalDate</userType>
+                                            <converter>com.jooq.examples.application.configuration.LocalDateConverter</converter>
+                                            <types>DATE</types>
+                                        </forcedType>
+                                        <forcedType>
+                                            <userType>java.time.LocalDateTime</userType>
+                                            <converter>com.jooq.examples.application.configuration.LocalDateTimeConverter</converter>
+                                            <types>TIMESTAMP</types>
+                                        </forcedType>
+                                    </forcedTypes>
                                 </database>
                             </generator>
                         </configuration>
@@ -251,9 +263,7 @@
         <profile>
             <id>sonar</id>
             <properties>
-                <sonar.host.url>
-                    http://localhost:9000
-                </sonar.host.url>
+                <sonar.host.url>http://localhost:9000</sonar.host.url>
             </properties>
             <build>
                 <plugins>
