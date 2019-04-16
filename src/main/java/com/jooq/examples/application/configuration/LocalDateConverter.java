@@ -8,7 +8,7 @@ import java.time.LocalDate;
 public class LocalDateConverter implements Converter<Date, LocalDate> {
     @Override
     public LocalDate from(Date date) {
-        return date == null ? null : LocalDate.parse(date.toString());
+        return date == null ? null : date.toLocalDate();
     }
 
     @Override

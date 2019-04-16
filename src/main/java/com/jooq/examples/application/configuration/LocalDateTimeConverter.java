@@ -8,9 +8,10 @@ import java.time.format.DateTimeFormatter;
 
 public class LocalDateTimeConverter implements Converter<Timestamp, LocalDateTime> {
     private static final String PATTERN = "yyyy-MM-dd HH:mm:ss";
+
     @Override
     public LocalDateTime from(Timestamp timestamp) {
-        return timestamp == null ? null : timestamp.toLocalDateTime();//LocalDateTime.parse(timestamp.toString());
+        return timestamp == null ? null : timestamp.toLocalDateTime();
     }
 
     @Override
